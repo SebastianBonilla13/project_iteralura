@@ -1,0 +1,10 @@
+package com.project.literalura.repository;
+
+import com.project.literalura.model.Libro;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LibroRepository extends JpaRepository<Libro,Long> {
+
+
+
+}

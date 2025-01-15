@@ -1,12 +1,9 @@
 package com.project.literalura.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "autores")
@@ -19,50 +16,31 @@ public class Autor {
     private String fecha_nacimiento;
     private String fecha_fallecimiento;
 
-    @ManyToMany
-    @JoinTable(
-            name = "autor_libro",
-            joinColumns = @JoinColumn(name = "autor_id"),
-            inverseJoinColumns = @JoinColumn(name = "libro_id")
-    )
-    private List<Libro> libros;
+    @OneToMany(mappedBy = "autor", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private List<Libro> libros = new ArrayList<>();;
 
     public Autor(){
     }
 
-    public Autor(DatosAutor autorConsultag) {
-        this.name = autorConsultag.name();
-        System.out.println("HOLAAAAAAAAAA");
+    public Autor(DatosAutor autorConsulta, Libro libro) {
+        this.name = autorConsulta.name();
         //this.fecha_nacimiento = String.valueOf(LocalDate.parse(autorConsultag.fecha_nacimiento()));
-        this.fecha_nacimiento = autorConsultag.fecha_nacimiento();
+        this.fecha_nacimiento = autorConsulta.fecha_nacimiento();
         //this.fecha_fallecimiento = String.valueOf(LocalDate.parse(autorConsultag.fecha_fallecimiento()));
-        this.fecha_fallecimiento = autorConsultag.fecha_fallecimiento();
-        System.out.println("HOLAAAAAAAAAA");
-
-        this.libros = asignarLibros(); // PENDIENTE
-        System.out.println("llibro asignado");
+        this.fecha_fallecimiento = autorConsulta.fecha_fallecimiento();
+        this.libros.add(libro);
+        //System.out.println("libro asignado");
     }
-
-    private List<Libro> asignarLibros() {
-        List<Libro> libros = new ArrayList<>();
-        Libro libro1 = new Libro();
-        libro1.setTitulo("HOLA");
-
-
-        libros.add(libro1);
-        // iterar o agregar, o agregar de otra manera (cuando se crea al autor)
-        return libros;
-    }
-
 
     @Override
     public String toString() {
-        return "Autor{" +
-                ", name='" + name + '\'' +
-                ", fecha_nacimiento='" + fecha_nacimiento + '\'' +
-                ", fecha_fallecimiento='" + fecha_fallecimiento + '\'' +
-                ", libros=" + libros +
-                '}';
+        return
+                "Autor: " + name + '\n' +
+                "Fecha de nacimiento: " + fecha_nacimiento + '\n' +
+                "Fecha de fallecimiento: " + fecha_fallecimiento + '\n' +
+                "Libros: [" + libros.stream()
+                    .map(Libro::getTitulo)
+                    .collect(Collectors.joining(", ")) + "]\n";
     }
 
     public Long getId() {

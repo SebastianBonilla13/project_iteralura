@@ -1,11 +1,6 @@
 package com.project.literalura.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
-
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "libros")
@@ -19,11 +14,13 @@ public class Libro {
     private String idioma;
     private Integer numero_descargas;
 
-    @ManyToMany(mappedBy = "libros")
-    private List<Autor> autores;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Autor autor;
 
     public Libro(){
     }
+
+
 
     public Libro(DatosLibro libroConsulta) {
 
@@ -34,23 +31,18 @@ public class Libro {
         }
         this.idioma = libroConsulta.idioma().get(0); // el primer idioma
         this.numero_descargas = libroConsulta.numero_descargas();
-        this.autores = libroConsulta.autores().stream() // obteniendo autores
-                .map(a -> new Autor(a) )
-                .collect(Collectors.toList());
+        this.autor = new Autor(libroConsulta.autores().get(0), this);
     }
-
-    //private List<Autor> asignarAutores(DatosLibro libroConsulta) {
-    //    libroConsulta.autores().forEach(a -> new Autor(a));
-    //}
 
     @Override
     public String toString() {
-        return "Libro{" +
-                ", titulo='" + titulo + '\'' +
-                ", idioma=" + idioma +
-                ", numero_descargas=" + numero_descargas +
-                ", autores=" + autores +
-                '}';
+        return "----- LIBRO ----- \n" +
+                "Título: " + titulo + '\n' +
+                "Autor: " + (autor != null ? autor.getName() : "null") + '\n' +
+                "Idioma: " + idioma + '\n' +
+                "Numero de descargas: " + numero_descargas + '\n' +
+                "----------------" + '\n'
+                ;
     }
 
     public Long getId() {
@@ -85,11 +77,11 @@ public class Libro {
         this.numero_descargas = numero_descargas;
     }
 
-    public List<Autor> getAutores() {
-        return autores;
+    public Autor getAutor() {
+        return autor;
     }
 
-    public void setAutores(List<Autor> autores) {
-        this.autores = autores;
+    public void setAutor(Autor autor) {
+        this.autor = autor;
     }
 }

@@ -36,6 +36,7 @@ public class Principal {
                     5- Listar libros por idioma
                     0- Salir
                     """;
+        System.out.println("\n    Bienvenido a Literalura");
         try{
             while(opc != 0){
                 System.out.println(menu);

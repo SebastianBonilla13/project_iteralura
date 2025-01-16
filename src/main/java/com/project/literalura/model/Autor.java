@@ -16,7 +16,7 @@ public class Autor {
     private String fecha_nacimiento;
     private String fecha_fallecimiento;
 
-    @OneToMany(mappedBy = "autor", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "autor", fetch = FetchType.EAGER)
     private List<Libro> libros = new ArrayList<>();;
 
     public Autor(){
@@ -24,12 +24,9 @@ public class Autor {
 
     public Autor(DatosAutor autorConsulta, Libro libro) {
         this.name = autorConsulta.name();
-        //this.fecha_nacimiento = String.valueOf(LocalDate.parse(autorConsultag.fecha_nacimiento()));
         this.fecha_nacimiento = autorConsulta.fecha_nacimiento();
-        //this.fecha_fallecimiento = String.valueOf(LocalDate.parse(autorConsultag.fecha_fallecimiento()));
         this.fecha_fallecimiento = autorConsulta.fecha_fallecimiento();
         this.libros.add(libro);
-        //System.out.println("libro asignado");
     }
 
     @Override

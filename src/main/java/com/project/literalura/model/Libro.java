@@ -14,13 +14,11 @@ public class Libro {
     private String idioma;
     private Integer numero_descargas;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     private Autor autor;
 
     public Libro(){
     }
-
-
 
     public Libro(DatosLibro libroConsulta) {
 
